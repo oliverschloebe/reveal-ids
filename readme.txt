@@ -54,6 +54,9 @@ None.
 
 == Changelog ==
 
+= 1.5.5 =
+* PHP 8.2 compatibility
+
 = 1.5.4 =
 * WordPress 5.3 compatibility
 

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Reveal IDs
-Version: 1.5.4
+Version: 1.5.5
 Plugin URI: https://www.schloebe.de/wordpress/reveal-ids-for-wp-admin-25-plugin/
 Description: Reveals hidden IDs in Admin interface that have been removed with WordPress 2.5 (formerly known as Entry IDs in Manage Posts/Pages View for WP 2.5). See <a href="options-general.php?page=reveal-ids-for-wp-admin-25/reveal-ids-for-wp-admin-25.php">options page</a> for information.
 Author: Oliver Schl&ouml;be
@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 /**
  * Define the plugin version
  */
-define("RIDWPA_VERSION", "1.5.4");
+define("RIDWPA_VERSION", "1.5.5");
 
 /**
  * Define the plugin path slug
@@ -70,6 +70,14 @@ define('RIDWPAISWP30', version_compare($GLOBALS['wp_version'], '2.9.999', '>'));
 * @author 		scripts@schloebe.de
 */
 class RevealIDsForWPAdmin {
+
+	/**
+	 * The textdomain_loaded var
+	 *
+	 * @var 		bool
+	 * @since 		1.3.0
+	 */
+	var $textdomain_loaded;
 
 	/**
  	* The RevealIDsForWPAdmin class constructor
@@ -141,19 +149,19 @@ class RevealIDsForWPAdmin {
 
 		foreach( get_taxonomies() as $taxonomy ) {
 			if( isset($taxonomy) ) {
-				add_action("manage_edit-${taxonomy}_columns", array(&$this, 'column_add'));
-				add_filter("manage_${taxonomy}_custom_column", array(&$this, 'column_return_value'), 100, 3);
+				add_action("manage_edit-" . $taxonomy . "_columns", array(&$this, 'column_add'));
+				add_filter("manage_" . $taxonomy . "_custom_column", array(&$this, 'column_return_value'), 100, 3);
 				if( version_compare($GLOBALS['wp_version'], '3.0.999', '>') )
-					add_filter("manage_edit-${taxonomy}_sortable_columns", array(&$this, 'column_add_clean') );
+					add_filter("manage_edit-" . $taxonomy . "_sortable_columns", array(&$this, 'column_add_clean') );
 			}
 		}
 
 		foreach( get_post_types() as $ptype ) {
 			if( isset($ptype) ) {
-				add_action("manage_edit-${ptype}_columns", array(&$this, 'column_add'));
-				add_filter("manage_${ptype}_posts_custom_column", array(&$this, 'column_value'), 100, 3);
+				add_action("manage_edit-" . $ptype . "_columns", array(&$this, 'column_add'));
+				add_filter("manage_" . $ptype . "_posts_custom_column", array(&$this, 'column_value'), 100, 3);
 				if( version_compare($GLOBALS['wp_version'], '3.0.999', '>') )
-					add_filter("manage_edit-${ptype}_sortable_columns", array(&$this, 'column_add_clean') );
+					add_filter("manage_edit-" . $ptype . "_sortable_columns", array(&$this, 'column_add_clean') );
 			}
 		}
 
