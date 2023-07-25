@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Reveal IDs
-Version: 1.5.5
+Version: 1.6.0
 Plugin URI: https://www.schloebe.de/wordpress/reveal-ids-for-wp-admin-25-plugin/
 Description: Reveals hidden IDs in Admin interface that have been removed with WordPress 2.5 (formerly known as Entry IDs in Manage Posts/Pages View for WP 2.5). See <a href="options-general.php?page=reveal-ids-for-wp-admin-25/reveal-ids-for-wp-admin-25.php">options page</a> for information.
 Author: Oliver Schl&ouml;be
@@ -9,7 +9,7 @@ Author URI: https://www.schloebe.de/
 Text Domain: reveal-ids-for-wp-admin-25
 Domain Path: /languages
 
-Copyright 2008-2021 Oliver Schlöbe (email : scripts@schloebe.de)
+Copyright 2008-2023 Oliver Schlöbe (email : scripts@schloebe.de)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,22 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 /**
  * Define the plugin version
  */
-define("RIDWPA_VERSION", "1.5.5");
-
-/**
- * Define the plugin path slug
- */
-define("RIDWPA_PLUGINPATH", "/" . plugin_basename( dirname(__FILE__) ) . "/");
-
-/**
- * Define the plugin full url
- */
-define("RIDWPA_PLUGINFULLURL", trailingslashit(plugins_url( null, __FILE__ )) );
-
-/**
- * Define the plugin full dir
- */
-define("RIDWPA_PLUGINFULLDIR", WP_PLUGIN_DIR . RIDWPA_PLUGINPATH );
+define("RIDWPA_VERSION", "1.6.0");
 
 
 /**
@@ -96,15 +81,10 @@ class RevealIDsForWPAdmin {
 			return;
 		}
 
-		register_activation_hook(__FILE__, array(&$this, 'on_activate'));
-
 		add_action('plugins_loaded', array(&$this, 'load_textdomain'));
 		add_action('admin_init', array(&$this, 'init'));
 
 		add_action('admin_head', array(&$this, 'add_css'));
-
-		add_action('admin_menu', array(&$this, 'add_option_menu'));
-		add_action('admin_menu', array(&$this, 'default_settings'));
 	}
 
 
@@ -186,17 +166,6 @@ class RevealIDsForWPAdmin {
 
 
 	/**
-	 * Set default settings upon plugin activation
-	 *
-	 * @since 1.3.0
-	 * @author scripts@schloebe.de
-	 */
-	function on_activate() {
-		$this->default_settings();
-	}
-
-
-	/**
 	 * Adds a bit of CSS
 	 *
 	 * @since 1.3.0
@@ -205,7 +174,7 @@ class RevealIDsForWPAdmin {
 	function add_css() {
 		echo "\n" . '<style type="text/css">
 	table.widefat th.column-ridwpaid {
-		width: 70px;
+		width: 80px;
 	}
 
 	table.widefat td.column-ridwpaid {
@@ -273,125 +242,6 @@ class RevealIDsForWPAdmin {
 		if($this->textdomain_loaded) return;
 		load_plugin_textdomain('reveal-ids-for-wp-admin-25', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 		$this->textdomain_loaded = true;
-	}
-
-
-	/**
-	 * Adds the plugin's default settings
-	 *
-	 * @since 1.3.0
-	 * @author scripts@schloebe.de
-	 */
-	function default_settings() {
-		if( get_option("ridwpa_post_ids_enable") ) {
-			delete_option("ridwpa_post_ids_enable");
-		}
-		if( get_option("ridwpa_page_ids_enable") ) {
-			delete_option("ridwpa_page_ids_enable");
-		}
-		if( get_option("ridwpa_link_ids_enable") ) {
-			delete_option("ridwpa_link_ids_enable");
-		}
-		if( get_option("ridwpa_cat_ids_enable") ) {
-			delete_option("ridwpa_cat_ids_enable");
-		}
-		if( get_option("ridwpa_media_ids_enable") ) {
-			delete_option("ridwpa_media_ids_enable");
-		}
-		if( get_option("ridwpa_user_ids_enable") ) {
-			delete_option("ridwpa_user_ids_enable");
-		}
-		if( get_option("ridwpa_tag_ids_enable") ) {
-			delete_option("ridwpa_tag_ids_enable");
-		}
-		if( get_option("ridwpa_reassigned_075_options") ) {
-			delete_option("ridwpa_reassigned_075_options");
-		}
-		if( get_option("ridwpa_reassigned_115_options") ) {
-			delete_option("ridwpa_reassigned_115_options");
-		}
-		if( !get_option("ridwpa_version") ) {
-			add_option("ridwpa_version", RIDWPA_VERSION);
-		}
-		if( get_option("ridwpa_version") != RIDWPA_VERSION ) {
-			update_option("ridwpa_version", RIDWPA_VERSION);
-		}
-	}
-
-
-	/**
-	 * Adds the plugin's options page
-	 *
-	 * @since 1.3.0
-	 * @author scripts@schloebe.de
-	 */
-	function add_option_menu() {
-		if ( current_user_can('switch_themes') && function_exists('add_submenu_page') ) {
-			$menutitle = __('Reveal IDs', 'reveal-ids-for-wp-admin-25');
-
-			add_submenu_page('options-general.php', __('Reveal IDs', 'reveal-ids-for-wp-admin-25'), $menutitle, 'manage_options', __FILE__, array(&$this, 'options_page'));
-		}
-	}
-
-
-	/**
-	 * Adds content to the plugin's options page
-	 *
-	 * @since 1.3.0
-	 * @author scripts@schloebe.de
-	 */
-	function options_page() {
-	?>
-
-	<div class="wrap">
-		<h2>
-        <?php _e('Reveal IDs', 'reveal-ids-for-wp-admin-25'); ?>
-      	</h2>
-		<div id="poststuff" class="ui-sortable">
-
-			<div id="ridwpa_plugins_box" class="postbox if-js-open">
-		      	<h3>
-		        	<?php _e('More of my WordPress plugins', 'reveal-ids-for-wp-admin-25'); ?>
-		      	</h3>
-				<table class="form-table">
-		 		<tr>
-		 			<td>
-		 				<?php _e('You may also be interested in some of my other plugins:', 'reveal-ids-for-wp-admin-25'); ?>
-						<p id="authorplugins-wrap"><input id="authorplugins-start" value="<?php _e('Show other plugins by this author inline &raquo;', 'reveal-ids-for-wp-admin-25'); ?>" class="button-secondary" type="button"></p>
-						<div id="authorplugins-wrap">
-							<div id='authorplugins'>
-								<div class='authorplugins-holder full' id='authorplugins_secondary'>
-									<div class='authorplugins-content'>
-										<ul id="authorpluginsul">
-
-										</ul>
-										<div class="clear"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-		 				<?php _e('More plugins at: <a class="button rbutton" href="http://www.schloebe.de/portfolio/" target="_blank">www.schloebe.de</a>', 'reveal-ids-for-wp-admin-25'); ?>
-		 			</td>
-		 		</tr>
-				</table>
-			</div>
-
-			<div id="ridwpa_help_box" class="postbox">
-		      	<h3>
-		        	<?php _e('Help', 'reveal-ids-for-wp-admin-25'); ?>
-		      	</h3>
-				<table class="form-table">
-		 		<tr>
-		 			<td>
-		 				<strong><?php _e('All options to enable/disable the display of IDs have been removed in version 1.3.0! If you would like to hide the ID column on a specific panel, just remove it in the options panel.', 'reveal-ids-for-wp-admin-25'); ?></strong>
-					</td>
-		 		</tr>
-				</table>
-			</div>
-
-		</div>
- 	</div>
-	<?php
 	}
 
 
