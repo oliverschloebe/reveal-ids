@@ -5,7 +5,6 @@ Tags: reveal, id, wp-admin, hidden, category, post, page, media, links, capabili
 Requires at least: 3.0
 Tested up to: 6.3.99
 Stable tag: trunk
-Requires PHP: 8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +53,9 @@ None.
 1. Installation finished.
 
 == Changelog ==
+
+= 1.6.1 =
+* Revert PHP8 requirement
 
 = 1.6.0 =
 * PHP 8.2 compatibility
