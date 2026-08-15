@@ -3,7 +3,8 @@ Contributors: Alphawolf
 Donate link: https://www.schloebe.de/donate/
 Tags: wp-admin, post, page, media, id
 Requires at least: 3.0
-Tested up to: 7.0.99
+Tested up to: 7.1
+Requires PHP: 7.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -53,6 +54,13 @@ None.
 1. Installation finished.
 
 == Changelog ==
+
+= 1.6.3 =
+* WordPress 7.1 compatibility
+* Security hardening: added an ABSPATH guard to block direct access to the plugin file
+* Removed the dead legacy authorplugins include that could cause a PHP fatal error on the old settings URL
+* Escaped the admin column header output with esc_attr__() / esc_html__()
+* Moved the inline admin CSS into a properly enqueued stylesheet
 
 = 1.6.2 =
 * WordPress 6.9 compatibility
